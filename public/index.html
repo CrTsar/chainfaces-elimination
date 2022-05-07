@@ -11,9 +11,89 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<style>
+	table {
+		border-collapse: collapse;
+		margin: 15px;
+		box-sizing: border-box;
+		font-size: 0.9em;
+		font-family: sans-serif;
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	}
+	table thead tr {
+		background: #1A73E8;
+		color: #ffffff;
+		text-align: left;
+	}
+	table th,
+	table td {
+		padding: 7px;
+	}
+	table tbody tr {
+		border-bottom: 1px solid #dddddd;
+		background: #fff;
+	}
+	table tbody tr:nth-of-type(even) {
+		background: #f8f8f8;
+	}
+	table tbody tr:last-of-type {
+		border-bottom: 2px solid #1A73E8;
+	}
+	table tbody tr:hover {
+		background: rgba(179, 197, 229, 0.21);
+	}
+	@media only screen and (max-width: 768px) {
+		table {
+			width: calc(100% - 14px);
+			margin: 7px;
+		}
+		table th,
+		table td {
+			padding: 4px;
+		}
+	}
+	</style>
 </head>
 <body>
-
+<table id="table">
+		<thead>
+			<tr>
+		        <th>Position</th>
+				<th>Holder</th>
+				<th>Balance</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<script>
+	fetch('https://api.covalenthq.com/v1/1/tokens/0x93a796B1E846567Fe3577af7B7BB89F71680173a/token_holders/?quote-currency=USD&format=JSON&block-height=latest&page-size=10000&key=ckey_c051e3b9081a474ab19214610fc')
+	//replace api key with SPT accounts key
+	.then(function (response) {
+		return response.json();
+	})
+	.then(function (data) {
+		appendData(data.data.items);
+	})
+	.catch(function (err) {
+		console.log('error: ' + err);
+	});
+	function appendData(items) {
+		var tbody = document.getElementById('table').getElementsByTagName('tbody')[0];
+		for (var i = 1; i < items.length; i++) {
+			var newRow = tbody.insertRow();
+			var newCellPosition = newRow.insertCell();
+			var newCellHolder = newRow.insertCell();
+			var newCellBalance = newRow.insertCell();
+			var newTextPosition = document.createTextNode(i);
+			var newTextHolder = document.createTextNode(items[i].address);
+			var newTextBalance = document.createTextNode(items[i].balance);
+			newCellPosition.appendChild(newTextPosition);
+			newCellHolder.appendChild(newTextHolder);
+			newCellBalance.appendChild(newTextBalance);
+		}
+	}
+	</script>
 <div id="app"></div>
 <!-- built files will be auto injected -->
 
