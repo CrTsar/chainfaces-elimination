@@ -55,6 +55,7 @@
 		        <th>Position</th>
 				<th>Holder</th>
 				<th>Balance</th>
+				<th>Opensea</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -87,13 +88,20 @@ fetch('https://api.covalenthq.com/v1/1/tokens/0x93a796B1E846567Fe3577af7B7BB89F7
 			var newCellPosition = newRow.insertCell();
 			var newCellHolder = newRow.insertCell();
 			var newCellBalance = newRow.insertCell();
+			var newCellOpensea = newRow.insertCell();
 			var newTextPosition = document.createTextNode(i);
 			var newTextHolder = document.createTextNode(items[i].address);
 			var newTextBalance = document.createTextNode(items[i].balance);
+			var newTextOpensea = document.createTextNode(items[i].address);
+			var url = "https://opensea.io/" + items[i].address;
+			var element = document.createElement("a");
+            element.setAttribute("href", url);
+            element.innerHTML = "Link";
 			newCellPosition.appendChild(newTextPosition);
 			newCellHolder.appendChild(newTextHolder);
 			newCellBalance.appendChild(newTextBalance);
-		}
+			newCellOpensea.appendChild(element);
+					}
 		paginator({
         table: document.getElementById("table").getElementsByTagName("tbody")[0],
         box: document.getElementById("index_native"),
