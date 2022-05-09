@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import About from "@/views/About";
-import Leaders from "@/views/Leaders";
+import Leaderboard from "@/views/Leaderboard";
 import Cowards from "@/views/Cowards";
 import Timemachine from "@/views/Timemachine";
 import Wallet from "@/views/Wallet";
@@ -21,9 +21,9 @@ const routes = [
     component: Home
   },
   {
-    path: '/leaders',
-    name: 'Leaders',
-    component: Leaders
+    path: '/leaderboard',
+    name: 'Leaderboard',
+    component: Leaderboard
   },
   {
     path: '/eliminated',

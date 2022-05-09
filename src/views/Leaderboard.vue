@@ -1,49 +1,94 @@
-/*****************************************************
- * Paginator Function                                *
- *****************************************************
- * config : {
- *     get_rows : function used to select rows to do pagination on
- *         If no function is provided, checks for a config.table element and looks for rows in there to page
- *
- *     box : Empty element that will have page buttons added to it
- *         If no config.box is provided, but a config.table is, then the page buttons will be added using the table
- *
- *     table : table element to be paginated
- *         not required if a get_rows function is provided
- *
- *     rows_per_page : number of rows to display per page
- *         default number is 10
- *
- *     page: page to display
- *         default page is 1
- *
- *     box_mode: "list", "buttons", or function. determines how the page number buttons are built.
- *         "list" builds the page index in list format and adds class "pagination" to the ul element. Meant for use with bootstrap
- *         "buttons" builds the page index out of buttons
- *         if this field is a function, it will be passed the config object as its only param and assumed to build the page index buttons
- *
- *     page_options: false or [{text: , value: }, ... ] used to set what the dropdown menu options are available, resets rows_per_page value
- *         false prevents the options from being displayed
- *         [{text: , value: }, ... ] allows you to customize what values can be chosen, a value of 0 will display all the table's rows.
- *         the default setup is
- *           [
- *               { value: 5,  text: '5'   },
- *               { value: 10, text: '10'  },
- *               { value: 20, text: '20'  },
- *               { value: 50, text: '50'  },
- *               { value: 100,text: '100' },
- *               { value: 0,  text: 'All' }
- *           ]
- *
- *     active_class: set the class for page buttons to have when active.
- *          defaults to "active"
- *
- *     disable: true or false, shows all rows of the table and hides pagination controlls if set to true.
- *
- *     tail_call: function to be called after paginator is done.
- *
- * }
- */
+<style>
+	table {
+		border-collapse: collapse;
+		margin: 15px;
+		box-sizing: border-box;
+		font-size: 0.9em;
+		font-family: sans-serif;
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	}
+	table thead tr {
+		background: #1A73E8;
+		color: #ffffff;
+		text-align: left;
+	}
+	table th,
+	table td {
+		padding: 7px;
+	}
+	table tbody tr {
+		border-bottom: 1px solid #dddddd;
+		background: #fff;
+	}
+	table tbody tr:nth-of-type(even) {
+		background: #f8f8f8;
+	}
+	table tbody tr:last-of-type {
+		border-bottom: 2px solid #1A73E8;
+	}
+	table tbody tr:hover {
+		background: rgba(179, 197, 229, 0.21);
+	}
+	@media only screen and (max-width: 768px) {
+		table {
+			width: calc(100% - 14px);
+			margin: 7px;
+		}
+		table th,
+		table td {
+			padding: 4px;
+		}
+	}
+</style>
+<template>
+	<table id="table">
+		<thead>
+			<tr>
+		        <th>Position</th>
+				<th>Holder</th>
+				<th>Balance</th>
+				<th>Opensea</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</template>
+<script type="text/javascript">
+fetch('https://api.covalenthq.com/v1/1/tokens/0x93a796B1E846567Fe3577af7B7BB89F71680173a/token_holders/?quote-currency=USD&format=JSON&block-height=latest&page-size=50&key=ckey_c051e3b9081a474ab19214610fc')
+	//replace api key with SPT accounts key
+	.then(function (response) {
+		return response.json();
+	})
+	.then(function (data) {
+		appendData(data.data.items);
+	})
+	.catch(function (err) {
+		console.log('error: ' + err);
+	});
+	
+	function appendData(items) {
+			var tbody = document.getElementById('table').getElementsByTagName('tbody')[0];
+		for (var i = 1; i < items.length; i++) {
+			var newRow = tbody.insertRow();
+			var newCellPosition = newRow.insertCell();
+			var newCellHolder = newRow.insertCell();
+			var newCellBalance = newRow.insertCell();
+			var newCellOpensea = newRow.insertCell();
+			var newTextPosition = document.createTextNode(i);
+			var newTextHolder = document.createTextNode(items[i].address);
+			var newTextBalance = document.createTextNode(items[i].balance);
+			var newTextOpensea = document.createTextNode(items[i].address);
+			var url = "https://opensea.io/" + items[i].address;
+			var element = document.createElement("a");
+            element.setAttribute("href", url);
+            element.innerHTML = "Link";
+			newCellPosition.appendChild(newTextPosition);
+			newCellHolder.appendChild(newTextHolder);
+			newCellBalance.appendChild(newTextBalance);
+			newCellOpensea.appendChild(element);
+					}
+}
 function paginator(config) {
     // throw errors if insufficient parameters were given
     if (typeof config != "object")
@@ -93,7 +138,7 @@ function paginator(config) {
         if (typeof selects != "undefined" && (selects.length > 0 && typeof selects[0].selectedIndex != "undefined")) {
             config.rows_per_page = selects[0].options[selects[0].selectedIndex].value;
         } else {
-            config.rows_per_page = 50;
+            config.rows_per_page = 10;
         }
     }
     var rows_per_page = config.rows_per_page;
@@ -280,4 +325,5 @@ function paginator(config) {
     }
 
     return box;
-}
+}  
+            </script>
